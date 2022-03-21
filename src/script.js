@@ -6,12 +6,25 @@ $(document).ready(function(){
         {
             location.reload();
         }
+        if($value=='+/-' || $value=='.')
+        {
+            alert('Feature coming soon..');
+        }
         if($value=='=')
         {
             console.log("equal");
-            $result = operations($number, $number2, $action);
-            $("input").val($result);
-            delete $action;
+            if(typeof($result)=='undefined')
+            {
+                $result = operations($number, $number2, $action);
+                $("input").val($result);
+                delete $action;
+            }
+            else
+            {
+                $result = operations($number, $result, $action);
+                $("input").val($result);
+                delete $action;
+            }
 
             return;
         }
@@ -22,7 +35,7 @@ $(document).ready(function(){
         $num = parseInt($value);
         if(typeof($result)=='undefined')
         {
-            console.log("working");
+            // console.log("working");
             if(isNaN($num))
             {
                 if (typeof($action)!= 'undefined')
@@ -51,23 +64,48 @@ $(document).ready(function(){
         }
         else 
         {
-            console.log($number, $number2, $action, $result);
-            if(isNaN($num))
-            {
-                $("input").val('');
-                $result = operations($number, $result, $action);
-                console.log("result");
-                $action= $value;
-                $number='';
-                $("input").val($result);
-            }
-            else
-            {
-                $number += $num;
-                $("input").val($number);
-            }
-           
-        }
+            if (typeof($action) == 'undefined')
+                {
+                    console.log("res="+$result);
+                    if(isNaN($num))
+                    {
+                        $("input").val('');
+                        $action= $value;
+                        $number='';
+                        console.log("defining action");
+                    }
+                    else
+                    {
+                        delete $result;
+                        delete $number;
+                        $number = $value;
+                        console.log("new calac");
+                    }
+                }
+                else
+                {
+                    if(isNaN($num))
+                    {
+                        if($result!='undefined')
+                        {
+                            $result = operations($number, $result, $action);
+                            delete $number;
+                            $action= $value;
+                            $("input").val($result);
+                        }
+                    }
+                    else
+                    {
+                        if (typeof($number)=='undefined')
+                        {
+                            $number='';
+                        }
+                        $number += $num;
+                        $("input").val($number);
+                    }
+                  
+                }
+                   }
 
 
     });
